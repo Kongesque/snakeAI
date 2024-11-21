@@ -5,7 +5,7 @@ from collections import namedtuple
 import numpy as np
 
 pygame.init()
-font = pygame.font.SysFont('arial', 25)
+font = pygame.font.SysFont('arial', 20)
 
 class Direction(Enum):
     RIGHT = 1
@@ -15,17 +15,19 @@ class Direction(Enum):
 
 Point = namedtuple('Point', 'x, y')
 
-GREEN = (0, 255, 0)
-RED = (200, 0, 0)
-BLACK = (0, 0, 0)
+BLUE = (77, 124, 246)
+RED = (231, 71, 29)
+WHITE = (255, 255, 255)
 
-BLOCK_SIZE = 20
-SPEED = 50
+
+BLOCK_SIZE = 40  
+SPEED = 40
 
 class SnakeAI:
-    def __init__(self, w = 640, h = 480):
-        self.w = w
-        self.h = h
+    def __init__(self, w = 200, h = 180):
+        self.w = (w // (BLOCK_SIZE // 2)) * BLOCK_SIZE
+        self.h = (h // (BLOCK_SIZE // 2)) * BLOCK_SIZE
+
         # init display
         self.display = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption('Snake')
@@ -36,7 +38,9 @@ class SnakeAI:
         # init game state
         self.direction = Direction.RIGHT
 
-        self.head = Point(self.w / 2, self.h / 2)
+        self.head = Point(
+            self.w // (2 * BLOCK_SIZE) * BLOCK_SIZE, 
+            self.h // (2 * BLOCK_SIZE) * BLOCK_SIZE)
         self.snake = [
             self.head,
             Point(self.head.x - BLOCK_SIZE, self.head.y),
@@ -103,14 +107,21 @@ class SnakeAI:
         return False
  
     def _update_ui(self):
-        self.display.fill(BLACK)
+        # Draw checkerboard pattern
+        for x in range(0, self.w, BLOCK_SIZE):
+            for y in range(0, self.h, BLOCK_SIZE):
+                if (x // BLOCK_SIZE + y // BLOCK_SIZE) % 2 == 0:
+                    color = (170, 215, 80) 
+                else:
+                    color = (162,209,72)  
+                pygame.draw.rect(self.display, color, pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE))
 
         for pt in self.snake:
-            pygame.draw.rect(self.display, GREEN, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
+            pygame.draw.rect(self.display, BLUE, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
 
         pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
 
-        text = font.render("Score: " + str(self.score), True, GREEN)
+        text = font.render("Score: " + str(self.score), True, WHITE)
         self.display.blit(text, [0, 0])
         pygame.display.flip()
 
