@@ -2,6 +2,8 @@
 
 This project features an AI trained to play the classic Snake game using Reinforcement Learning. The implementation leverages **PyTorch** for the neural network and **Pygame** for game visualization.
 
+![Demo](demo.gif)
+
 ## Requirements
 To set up the environment, ensure the following dependencies are installed:
 - Python 3.8 or higher
